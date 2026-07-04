@@ -13,16 +13,31 @@ module.exports = defineConfig({
       cookieSecret: process.env.COOKIE_SECRET,
     }
   },
-  modules: {
-    auth: {
-      resolve: "@medusajs/auth-emailpass",
-      options: {},
-    },
-    payment: {
-      resolve: "@medusajs/payment-stripe",
+  modules: [
+    {
+      resolve: "@medusajs/auth",
       options: {
-        apiKey: process.env.STRIPE_API_KEY,
+        providers: [
+          {
+            resolve: "@medusajs/auth-emailpass",
+            id: "emailpass",
+          },
+        ],
       },
     },
-  },
+    {
+      resolve: "@medusajs/payment",
+      options: {
+        providers: [
+          {
+            resolve: "@medusajs/payment-stripe",
+            id: "stripe",
+            options: {
+              apiKey: process.env.STRIPE_API_KEY,
+            },
+          },
+        ],
+      },
+    },
+  ],
 })
